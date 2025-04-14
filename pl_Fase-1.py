@@ -4,35 +4,60 @@ FASE 1: Rappresentazione del piano cartesiano
 Obiettivo: Creare un grafico vuoto con assi cartesiani ben definiti
 """
 
-import matplotlib.pyplot as plt
+import plotly.graph_objs as lib
 
-# Creo la figura e gli assi
-fig, ax = plt.subplots()
+# Creo la figura vuota
+fig = lib.Figure()
 
-# Possibilità di modificare la grandezza degli assi
-ax.set_xlim(-50, 50)
-ax.set_ylim(-10, 50)
-
-# Disegno gli assi cartesiani
-ax.annotate("", xy=(50, 0), xytext=(-50, 0), arrowprops=dict(arrowstyle="->", color='grey', linewidth=1))  # Asse X
-ax.annotate("", xy=(0, 50), xytext=(0, -10), arrowprops=dict(arrowstyle="->", color='grey', linewidth=1)) # Asse Y
-
-# Possibilità di aggiungere la griglia
-ax.grid(False)
-
-# Titolo
-ax.set_title('Fase-01, creazione assi cartesiani')
-
-# Nascondo i bordi esterni 
-ax.spines['top'].set_color('none')
-ax.spines['right'].set_color('none')
-
-# layout dinamico con spazio bianco in basso
-plt.subplots_adjust(
-    left=0.1,   # bordo sinistro
-    right=0.9,  # bordo destro
-    top=0.9,    # bordo alto
-    bottom=0.3  # bordo basso
+# Asse X
+fig.add_shape(
+    type="line",
+    x0=-1000, y0=0, x1=10000, y1=0,
+    line=dict(color="grey", width=2),
+)
+fig.add_annotation(
+    x=50, y=0,
+    ax=48, ay=0,
+    xref="x", yref="y",
+    axref="x", ayref="y",
+    showarrow=True,
+    arrowhead=2,
+    arrowsize=1,
+    arrowwidth=2,
+    arrowcolor="grey"
 )
 
-plt.show()
+# Asse Y 
+fig.add_shape(
+    type="line",
+    x0=0, y0=-10000, x1=0, y1=10000,
+    line=dict(color="grey", width=2),
+)
+fig.add_annotation(
+    x=0, y=50,
+    ax=0, ay=48,
+    xref="x", yref="y",
+    axref="x", ayref="y",
+    showarrow=True,
+    arrowhead=2,
+    arrowsize=1,
+    arrowwidth=2,
+    arrowcolor="grey",
+    xanchor="center",  # Ancoraggio della freccia al centro
+    yanchor="top",  # Ancoraggio della freccia in alto
+)
+
+
+# Layout generale
+fig.update_layout(
+    title="Fase-01, creazione assi cartesiani",
+    xaxis=dict(range=[-50, 50], zeroline=False, showgrid=True, gridcolor='lightgrey'),
+    yaxis=dict(range=[-50, 50], zeroline=False, showgrid=True, gridcolor='lightgrey'),
+    plot_bgcolor="white",  # sfondo bianco
+    margin=dict(l=50, r=50, t=50, b=150),  # spazio bianco in basso
+    autosize=True,  # Adatta automaticamente la dimensione del grafico
+    dragmode="pan",  # Abilita lo spostamento (pan) del grafico
+    hovermode="closest"  # Abilita l'interazione con il grafico
+)
+
+fig.show()
