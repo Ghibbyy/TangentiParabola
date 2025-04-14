@@ -14,8 +14,8 @@ ax.set_xlim(-50, 50)
 ax.set_ylim(-10, 50)
 
 # Disegno gli assi cartesiani
-ax.axhline(0, color='grey', linewidth=1)  # Asse X
-ax.axvline(0, color='grey', linewidth=1)  # Asse Y
+ax.annotate("", xy=(50, 0), xytext=(-50, 0), arrowprops=dict(arrowstyle="->", color='grey', linewidth=1))  # Asse X
+ax.annotate("", xy=(0, 50), xytext=(0, -10), arrowprops=dict(arrowstyle="->", color='grey', linewidth=1)) # Asse Y
 
 # Possibilità di aggiungere la griglia
 ax.grid(False)
