@@ -21,7 +21,7 @@ app.layout = html.Div(
             children=[
                 html.H2("Inserisci i valori per l'equazione della parabola"),
                 dcc.Input(id="a", type="number", value=2, step=0.5, debounce=True, placeholder="Coefficiente a", style={"margin": "10px", "width": "150px"}),
-                dcc.Input(id="b", type="number", value=5, step=0.5, debounce=True, placeholder="Coefficiente b", style={"margin": "10px", "width": "150px"}),
+                dcc.Input(id="b", type="number", value=0, step=0.5, debounce=True, placeholder="Coefficiente b", style={"margin": "10px", "width": "150px"}),
                 dcc.Input(id="c", type="number", value=0, step=0.5, debounce=True, placeholder="Coefficiente c", style={"margin": "10px", "width": "150px"}),
             ]
         ),
