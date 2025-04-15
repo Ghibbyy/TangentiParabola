@@ -1,3 +1,8 @@
+"""
+FASE 2: Rappresentazione di una retta sul piano cartesiano
+
+Obiettivo: Disegnare una retta con equazione y = ax + b
+"""
 import dash
 from dash import dcc, html
 from dash.dependencies import Input, Output
@@ -11,10 +16,10 @@ app = dash.Dash(__name__)
 app.layout = html.Div(
     style={"display": "flex", "flexDirection": "column", "height": "100vh"},
     children=[
-        # Sezione per l'input dei dati sopra il grafico
+        #input dei dati sopra il grafico
         html.Div(
             style={
-                "flex": 0.2,  # La sezione dell'input occupa 1/5 dello schermo
+                "flex": 0.2, 
                 "padding": "20px", 
                 "textAlign": "center",
             },
@@ -24,10 +29,10 @@ app.layout = html.Div(
                 dcc.Input(id="intercetta", type="number", value=3, step=0.5, debounce=True, placeholder="Intercetta (b)", style={"margin": "10px", "width": "150px"}),
             ]
         ),
-        # Grafico che occupa tutta la parte rimanente della schermata
+        # Grafico 
         html.Div(
             dcc.Graph(id='grafico_retta'),
-            style={"flex": 1, "height": "100%"}  # Grafico occupa il restante spazio
+            style={"flex": 1, "height": "100%"}
         ),
     ]
 )
@@ -39,7 +44,6 @@ app.layout = html.Div(
      Input('intercetta', 'value')]
 )
 def aggiorna_grafico(a, b):
-    # Crea il grafico
     fig = lib.Figure()
 
     # Asse X (linea orizzontale)
@@ -57,10 +61,10 @@ def aggiorna_grafico(a, b):
     )
 
     # Calcola i punti della retta y = ax + b (rettangolo lungo)
-    x = np.linspace(-1000, 1000, 1000)  # Rettangolo lungo
+    x = np.linspace(-1000, 1000, 1000)
     y = float(a) * x + float(b)
 
-    # Aggiungi la retta come una traccia
+    # Aggiungi la retta
     fig.add_trace(lib.Scatter(x=x, y=y, mode='lines', name=f'y = {a}x + {b}'))
 
     initial_range = 50  # zoom
