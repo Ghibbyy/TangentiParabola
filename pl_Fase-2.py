@@ -1,66 +1,79 @@
-"""
-FASE 2: Rappresentazione di una retta sul piano cartesiano
-
-Obiettivo: Disegnare una retta con equazione y = ax + b
-"""
-
+import dash
+from dash import dcc, html
+from dash.dependencies import Input, Output
 import plotly.graph_objs as lib
 import numpy as np
 
-# Creo la figura vuota
-fig = lib.Figure()
+# Crea l'app Dash
+app = dash.Dash(__name__)
 
-# Asse X
-fig.add_shape(
-    type="line",
-    x0=-1000, y0=0, x1=10000, y1=0,
-    line=dict(color="grey", width=2),
-)
-fig.add_annotation(
-    x=50, y=0,
-    ax=48, ay=0,
-    xref="x", yref="y",
-    axref="x", ayref="y",
-    showarrow=True,
-    arrowhead=2,
-    arrowsize=1,
-    arrowwidth=2,
-    arrowcolor="grey"
-)
-
-# Asse Y 
-fig.add_shape(
-    type="line",
-    x0=0, y0=-10000, x1=0, y1=10000,
-    line=dict(color="grey", width=2),
-)
-fig.add_annotation(
-    x=0, y=50,
-    ax=0, ay=48,
-    xref="x", yref="y",
-    axref="x", ayref="y",
-    showarrow=True,
-    arrowhead=2,
-    arrowsize=1,
-    arrowwidth=2,
-    arrowcolor="grey",
-    xanchor="center",  # Ancoraggio della freccia al centro
-    yanchor="top",  # Ancoraggio della freccia in alto
-)
-x = np.linspace(-10, 10, 100)
-y = 2 * x + 1
-fig.add_trace(lib.Scatter(x=x, y=y, mode='lines', name='y = 2x + 1'))
-
-# Layout generale
-fig.update_layout(
-    title="Fase-01, creazione assi cartesiani",
-    xaxis=dict(range=[-50, 50], zeroline=False, showgrid=True, gridcolor='lightgrey'),
-    yaxis=dict(range=[-50, 50], zeroline=False, showgrid=True, gridcolor='lightgrey'),
-    plot_bgcolor="white",  # sfondo bianco
-    margin=dict(l=50, r=50, t=50, b=150),  # spazio bianco in basso
-    autosize=True,  # Adatta automaticamente la dimensione del grafico
-    dragmode="pan",  # Abilita lo spostamento (pan) del grafico
-    hovermode="closest"  # Abilita l'interazione con il grafico
+# Layout dell'app
+app.layout = html.Div(
+    style={"display": "flex", "flexDirection": "column", "height": "100vh"},
+    children=[
+        # Sezione per l'input dei dati sopra il grafico
+        html.Div(
+            style={
+                "flex": 0.2,  # La sezione dell'input occupa 1/5 dello schermo
+                "padding": "20px", 
+                "textAlign": "center",
+            },
+            children=[
+                html.H2("Inserisci i valori per l'equazione della retta"),
+                dcc.Input(id="pendenza", type="number", value=2, step=0.5, debounce=True, placeholder="Pend. (a)", style={"margin": "10px", "width": "150px"}),
+                dcc.Input(id="intercetta", type="number", value=3, step=0.5, debounce=True, placeholder="Intercetta (b)", style={"margin": "10px", "width": "150px"}),
+            ]
+        ),
+        # Grafico che occupa tutta la parte rimanente della schermata
+        html.Div(
+            dcc.Graph(id='grafico_retta'),
+            style={"flex": 1, "height": "100%"}  # Grafico occupa il restante spazio
+        ),
+    ]
 )
 
-fig.show()
+# Funzione di callback per aggiornare il grafico
+@app.callback(
+    Output('grafico_retta', 'figure'),
+    [Input('pendenza', 'value'),
+     Input('intercetta', 'value')]
+)
+def aggiorna_grafico(a, b):
+    # Crea il grafico
+    fig = lib.Figure()
+
+    # Asse X (linea orizzontale)
+    fig.add_shape(
+        type="line",
+        x0=-1000, y0=0, x1=1000, y1=0,
+        line=dict(color="grey", width=2),
+    )
+
+    # Asse Y (linea verticale)
+    fig.add_shape(
+        type="line",
+        x0=0, y0=-1000, x1=0, y1=1000,
+        line=dict(color="grey", width=2),
+    )
+
+    # Calcola i punti della retta y = ax + b (rettangolo lungo)
+    x = np.linspace(-1000, 1000, 1000)  # Rettangolo lungo
+    y = float(a) * x + float(b)
+
+    # Aggiungi la retta come una traccia
+    fig.add_trace(lib.Scatter(x=x, y=y, mode='lines', name=f'y = {a}x + {b}'))
+
+    initial_range = 50  # zoom
+    fig.update_layout(
+        title=f"y = {a}x + {b}",
+        xaxis=dict(range=[-initial_range, initial_range], zeroline=False, showgrid=True, gridcolor='lightgrey'),
+        yaxis=dict(range=[-initial_range, initial_range], zeroline=False, showgrid=True, gridcolor='lightgrey'),
+        plot_bgcolor="white",
+        autosize=True,  # Grafico adattabile alle dimensioni della finestra
+    )
+    
+    return fig
+
+# Esegui l'app
+if __name__ == '__main__':
+    app.run(debug=True)
